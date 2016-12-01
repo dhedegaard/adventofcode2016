@@ -30,7 +30,6 @@ namespace Day01
             }
         }
 
-        public static Direction currDir = Direction.north;
         public const string input = "R5, L2, L1, R1, R3, R3, L3, R3, R4, L2, R4, L4, R4, R3, L2, L1, L1, R2, R4, R4, L4, R3, L2, R1, L4, R1, R3, L5, L4, L5, R3, L3, L1, L1, R4, R2, R2, L1, L4, R191, R5, L2, R46, R3, L1, R74, L2, R2, R187, R3, R4, R1, L4, L4, L2, R4, L5, R4, R3, L2, L1, R3, R3, R3, R1, R1, L4, R4, R1, R5, R2, R1, R3, L4, L2, L2, R1, L3, R1, R3, L5, L3, R5, R3, R4, L1, R3, R2, R1, R2, L4, L1, L1, R3, L3, R4, L2, L4, L5, L5, L4, R2, R5, L4, R4, L2, R3, L4, L3, L5, R5, L4, L2, R3, R5, R5, L1, L4, R3, L1, R2, L5, L1, R4, L1, R5, R1, L4, L4, L4, R4, R3, L5, R1, L3, R4, R3, L2, L1, R1, R2, R2, R2, L1, L1, L2, L5, L3, L1";
 
         public static void Main(string[] args)
@@ -39,7 +38,7 @@ namespace Day01
             var currDir = Direction.north;
             var currPos = new Position { x = 0, y = 0 };
             var path = new List<Position>();
-            var foundFirstOverlap = false;
+            int? firstOverlap = null;
             foreach (var inst in input.Split(", ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 // Change Direction
@@ -66,16 +65,17 @@ namespace Day01
                         case Direction.east: currPos.x++; break;
                     }
                     // Check to see if we've been here before
-                    if (!foundFirstOverlap && path.Where(e => e.x == currPos.x && e.y == currPos.y).Any())
+                    if (firstOverlap != null && path.Where(e => e.x == currPos.x && e.y == currPos.y).Any())
                     {
-                        foundFirstOverlap = true;
-                        Console.WriteLine($"part2: First overlap is {currPos.AbsFromZero} blocks away");
+                        firstOverlap = currPos.AbsFromZero;
                     }
                     path.Add(currPos);
                 }
             }
             // Now, where did we end up ?
             Console.WriteLine($"part1: The end location is {currPos.AbsFromZero} blocks away");
+            // Part2: The first time we hit the same position twice.
+            Console.WriteLine($"part2: First overlap is {currPos.AbsFromZero} blocks away");
         }
     }
 }
