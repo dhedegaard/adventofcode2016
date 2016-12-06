@@ -18,14 +18,11 @@ namespace ConsoleApplication
                 var chars = lines.Select(e => e[i])
                      .GroupBy(e => e)
                      .OrderBy(c => c.Key)
-                     .ToDictionary(grp => grp.Key, grp => grp.Count());
+                     .ToDictionary(grp => grp.Key, grp => grp.Count())
+                     .OrderByDescending(e => e.Value);
 
-                output.Add(chars
-                    .OrderByDescending(e => e.Value)
-                    .FirstOrDefault().Key);
-                output2.Add(chars
-                    .OrderBy(e => e.Value)
-                    .FirstOrDefault().Key);
+                output.Add(chars.First().Key);
+                output2.Add(chars.Last().Key);
             }
             Console.WriteLine($"part1: {string.Concat(output)}");
             Console.WriteLine($"part2: {string.Concat(output2)}");
