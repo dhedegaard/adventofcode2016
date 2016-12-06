@@ -15,14 +15,10 @@ namespace ConsoleApplication
             var output2 = new List<char>(linelength);
             for (var i = 0; i < linelength; i++)
             {
-                var chars = new Dictionary<char, int>();
-
-                foreach (var line in lines)
-                {
-                    var c = line[i];
-                    if (!chars.ContainsKey(c)) chars[c] = 1;
-                    else chars[c]++;
-                }
+                var chars = lines.Select(e => e[i])
+                     .GroupBy(e => e)
+                     .OrderBy(c => c.Key)
+                     .ToDictionary(grp => grp.Key, grp => grp.Count());
 
                 output.Add(chars
                     .OrderByDescending(e => e.Value)
