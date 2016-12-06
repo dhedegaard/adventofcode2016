@@ -17,7 +17,6 @@ namespace ConsoleApplication
             {
                 var chars = lines.Select(e => e[i])
                      .GroupBy(e => e)
-                     .OrderBy(c => c.Key)
                      .ToDictionary(grp => grp.Key, grp => grp.Count())
                      .OrderByDescending(e => e.Value);
 
