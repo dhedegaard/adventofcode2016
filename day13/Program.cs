@@ -73,9 +73,10 @@ namespace ConsoleApplication
                                 y = new_y,
                                 steps = current.steps + 1,
                             });
-                            visited.Add(Tuple.Create(new_y, new_x));
+                            var new_tuple_point = Tuple.Create(new_y, new_x);
+                            visited.Add(new_tuple_point);
                             if (current.steps + 1 <= 50)
-                                visited_below_50.Add(Tuple.Create(new_y, new_x));
+                                visited_below_50.Add(new_tuple_point);
                         }
                     }
             }
