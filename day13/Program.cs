@@ -62,18 +62,20 @@ namespace ConsoleApplication
                     for (var dx = -1; dx < 2; dx++)
                     {
                         if (dy == 0 && dx == 0 || dy != 0 && dx != 0) continue;
-                        if (isValid(input, current.y + dy, current.x + dx) &&
-                            !visited.Contains(Tuple.Create(current.y + dy, current.x + dx)))
+                        var new_x = current.x + dx;
+                        var new_y = current.y + dy;
+                        if (isValid(input, new_y, new_x) &&
+                            !visited.Contains(Tuple.Create(new_y, new_x)))
                         {
                             queue.Enqueue(new Point
                             {
-                                x = current.x + dx,
-                                y = current.y + dy,
+                                x = new_x,
+                                y = new_y,
                                 steps = current.steps + 1,
                             });
-                            visited.Add(Tuple.Create(current.y + dy, current.x + dx));
+                            visited.Add(Tuple.Create(new_y, new_x));
                             if (current.steps + 1 <= 50)
-                                visited_below_50.Add(Tuple.Create(current.y + dy, current.x + dx));
+                                visited_below_50.Add(Tuple.Create(new_y, new_x));
                         }
                     }
             }
