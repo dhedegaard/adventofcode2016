@@ -45,7 +45,6 @@ namespace ConsoleApplication
             while (queue.Any())
             {
                 var pos = queue.Dequeue();
-                // Console.WriteLine($"{pos.y}, {pos.x}");
                 if (pos.x == 3 && pos.y == 3)
                 {
                     if (!part1)
@@ -59,7 +58,6 @@ namespace ConsoleApplication
                 }
 
                 var udlr = md5sum(pos.hash);
-                // Console.WriteLine($"  UDLR: {udlr}");
                 if (pos.y > 0 && validChars.Contains(udlr[0]))  // UP
                     queue.Enqueue(new Position
                     {
