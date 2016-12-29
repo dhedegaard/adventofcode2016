@@ -9,9 +9,18 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
-            var input = "abcdefgh".ToCharArray();
+            var part1 = Scramble("abcdefgh".ToCharArray());
+            Console.WriteLine($"part1: {part1}");
 
-            foreach (var line in File.ReadAllLines("input.txt"))
+            var part2 = Scramble("fbgdceah".ToCharArray(), true);
+            Console.WriteLine($"part2: {part2}");
+        }
+
+        public static string Scramble(char[] input, bool reverse = false)
+        {
+            var instructions = File.ReadAllLines("input.txt");
+            if (reverse) instructions = instructions.Reverse().ToArray();
+            foreach (var line in instructions)
             {
                 var inst = line.Split(" ".ToCharArray());
                 if (inst[0] == "swap" && inst[1] == "position")
@@ -43,12 +52,12 @@ namespace ConsoleApplication
                         .Concat(input.Skip(fromIdx + count))
                         .ToArray();
                 }
-                else if (inst[0] == "rotate" && inst[1] == "left")
+                else if (inst[0] == "rotate" && (inst[1] == "left" && !reverse || inst[1] == "right" && reverse))
                 {
                     var count = int.Parse(inst[2]);
                     input = input.Skip(count).Concat(input.Take(count)).ToArray();
                 }
-                else if (inst[0] == "rotate" && inst[1] == "right")
+                else if (inst[0] == "rotate" && (inst[1] == "right" && !reverse || inst[1] == "left" && reverse))
                 {
                     var count = int.Parse(inst[2]);
                     count = (input.Length + count * -1) % input.Length;
@@ -58,6 +67,12 @@ namespace ConsoleApplication
                 {
                     var fromIdx = int.Parse(inst[2]);
                     var toIdx = int.Parse(inst[5]);
+                    if (reverse)
+                    {
+                        var tmp = fromIdx;
+                        fromIdx = toIdx;
+                        toIdx = tmp;
+                    }
                     var list = input.ToList();
                     var elem = list[fromIdx];
                     list.RemoveAt(fromIdx);
@@ -68,22 +83,35 @@ namespace ConsoleApplication
                 {
                     var elem = inst[6][0];
                     var idx = input.ToList().IndexOf(elem);
-                    var steps = idx + 1;
-                    if (idx >= 4)
-                        steps++;
-                    steps = steps % input.Length;
-                    var newInput = new List<char>();
-                    for (var i = 0; i < input.Length; i++)
-                        newInput.Add(input[((i + -1 * steps) + input.Length) % input.Length]);
-                    input = newInput.ToArray();
+                    if (!reverse)
+                    {
+                        var steps = idx + 1;
+                        if (idx >= 4)
+                            steps++;
+                        steps = steps % input.Length;
+                        var newInput = new List<char>();
+                        for (var i = 0; i < input.Length; i++)
+                            newInput.Add(input[((i + -1 * steps) + input.Length) % input.Length]);
+                        input = newInput.ToArray();
+                    }
+                    else
+                    {
+                        if (idx != 0 && idx % 2 == 0)
+                            idx += input.Length;
+                        idx = (idx / 2 + 1) % input.Length;
+                        input = input
+                            .Skip(idx)
+                            .Concat(input.Take(idx))
+                            .ToArray();
+                    }
                 }
                 else
                 {
                     Console.WriteLine($"DONT KNOW HOW TO: {line}");
-                    return;
+                    return null;
                 }
             }
-            Console.WriteLine($"part1: {string.Concat(input)}");
+            return string.Concat(input);
         }
     }
 }
